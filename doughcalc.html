@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" href="/images/pizza copy.png" type="image/x-icon">
+
+<title>Doe Calculator — Pizza Dough</title>
+
+
+<style>
+    body {
+        font-family: "Merriweather", serif;
+        background: #faf7f2;
+        padding: 20px;
+        color: #333;
+        max-width: 800px;
+        margin: auto;
+    }
+
+    h1, h2 {
+        font-family: "Patrick Hand", cursive;
+        font-size: 2.3rem;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        display: block;
+        margin-top: 12px;
+    }
+
+    input[type="number"], input[type="range"], select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        font-size: 1.1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    table th {
+        background: #f0e7d8;
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        padding: 10px;
+    }
+
+    table td {
+        padding: 12px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .section {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .value-display {
+        font-family: "Patrick Hand";
+        font-size: 1.4rem;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
+</head>
+
+<body>
+<div class="container">
+  <header>
+    <h1>Calculator — Pizza Dough</h1>
+    <div class="small">Factor: <span id="dbg-factor">2.387 g/in²</span></div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      
+      <!-- diameter slider -->
+      <label>Pizza Size (inches): <span id="diameterDisplay">12</span></label>
+      <input id="diameter" type="range" min="10" max="16" step="1" value="12">
+
+      <!-- quantity slider -->
+      <label>Number of Pizzas: <span id="qtyDisplay">1</span></label>
+      <input id="pizzaQuantity" type="range" min="1" max="10" value="1" step="1">
+
+      <!-- thickness -->
+      <!-- <label>Thickness / Dough Factor</label> -->
+      <select id="thickness" hidden>
+        <option value="2.387" selected>Regular (2.387)</option>
+        <option value="custom">Custom</option>
+      </select>
+
+      <input id="customFactor" type="number" step="0.001" min="0.1" value="2.387" style="display:none">
+
+      <div class="controls">
+        <!-- <button id="calcBtn">Calculate</button> -->
+        <!-- <button id="resetBtn" class="ghost">Reset</button> -->
+        <label style="margin-left:auto;">
+          <input id="showVolumes" type="checkbox" hidden checked>
+        </label>
+      </div>
+
+      <div id="doughWeight">— g</div>
+
+    </div>
+
+    <!-- ingredient table -->
+    <div class="card">
+      <h3>Ingredients</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Grams</th>
+            <th>Volume</th>
+          </tr>
+        </thead>
+        <tbody id="ingredientsTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+/* -----------------------------
+   DATA
+------------------------------*/
+const BAKERS_PCT = {
+  flour: 1.0,
+  water: 0.6213,
+  yeast: 0.004,
+  salt: 0.024,
+  sugar: 0.0213,
+  olive_oil: 0.032,
+};
+
+const GRAMS_PER_CUP = {
+  flour: 120,
+  water: 237,
+  sugar: 200,
+  olive_oil: 216,
+  salt: 288,
+  yeast: 160
+};
+
+
+const GRAMS_PER_TSP = {
+  flour: 2.5,
+  water: 5,
+  sugar: 4.2,
+  olive_oil: 4.5,
+  salt: 6,
+  yeast: 3
+};
+
+
+const DEFAULT_FACTOR = 2.387;
+
+/* -----------------------------
+   HELPERS
+------------------------------*/
+function doughBallWeight(diam, factor) {
+  const r = diam / 2;
+  const area = Math.PI * r * r;
+  return area * factor;
+}
+
+function ingredientWeights(doughG) {
+  const flour = doughG / (1 + BAKERS_PCT.water + BAKERS_PCT.yeast + BAKERS_PCT.salt + BAKERS_PCT.sugar + BAKERS_PCT.olive_oil);
+  
+  const out = {};
+  out.flour = Math.round(flour*10)/10;
+  for (let [k, pct] of Object.entries(BAKERS_PCT)) {
+    if(k==="flour") continue;
+    out[k] = Math.round((flour * pct)*10)/10;
+  }
+  return out;
+}
+
+
+function plural(x, txt) {
+  return x === 1 ? txt : txt + "s";
+}
+
+/* FRACTION HELPERS */
+function toFractionString(value) {
+  const fractions = [
+    [0.25, "¼"],
+    [0.5,  "½"],
+    [0.75, "¾"]
+  ];
+
+  let whole = Math.floor(value);
+  let frac = value - whole;
+
+  let best = fractions.find(([n]) => Math.abs(frac - n) < 0.12);
+
+  let s = "";
+  if (whole > 0) s += whole;
+
+  if (best) {
+    if (s) s += " ";
+    s += best[1];
+  }
+
+  return s || "0";
+}
+
+/* Convert grams → layered fractions */
+function gramsToLayered(grams, key) {
+  if (!grams || grams <= 0) return "—";
+
+  const gCup = GRAMS_PER_CUP[key];
+  const gTsp = GRAMS_PER_TSP[key];
+
+  let cups = grams / gCup;
+  let tsp = grams / gTsp;
+  let tbsp = tsp / 3;
+
+  /* Convert using layered fractions */
+  if (cups >= 0.99) {
+    return formatMeasure(cups, "cup");
+  } else if (cups >= 0.25) {
+    return formatMeasure(cups, "cup");
+  } else if (tbsp >= 1) {
+    return formatMeasure(tbsp, "tbsp");
+  } else {
+    return formatMeasure(tsp, "tsp");
+  }
+}
+
+function formatMeasure(value, unit) {
+  const whole = Math.floor(value);
+  const remainder = value - whole;
+
+  let text = "";
+
+  if (whole > 0) {
+    text += whole + " " + plural(whole, unit);
+  }
+
+  const fractions = [
+    [0.25, "¼"],
+    [0.5, "½"],
+    [0.75, "¾"]
+  ];
+
+  const best = fractions.find(([n]) => Math.abs(remainder - n) < 0.12);
+
+  if (best) {
+    if (text) text += " ";
+    text += best[1] + " " + unit;
+    if (best[1] !== "½") text += "s";
+  }
+
+  if (!text) {
+    // fallback grams
+    return Math.round(value * 100) / 100 + " " + unit;
+  }
+
+  return text;
+}
+
+
+/* -----------------------------
+   DOM ELEMENTS
+------------------------------*/
+const diameter = document.getElementById("diameter");
+const diameterDisplay = document.getElementById("diameterDisplay");
+
+const qty = document.getElementById("pizzaQuantity");
+const qtyDisplay = document.getElementById("qtyDisplay");
+
+const thickness = document.getElementById("thickness");
+const customFactor = document.getElementById("customFactor");
+
+const dbgFactor = document.getElementById("dbg-factor");
+
+const calcBtn = document.getElementById("calcBtn");
+const resetBtn = document.getElementById("resetBtn");
+const showVolumes = document.getElementById("showVolumes");
+
+const doughWeightEl = document.getElementById("doughWeight");
+const tableBody = document.getElementById("ingredientsTable");
+
+
+/* -----------------------------
+   UI SYNC
+------------------------------*/
+diameter.addEventListener("input", () => {
+  diameterDisplay.textContent = diameter.value;
+  calculate();
+});
+
+qty.addEventListener("input", () => {
+  qtyDisplay.textContent = qty.value;
+  calculate();
+});
+
+thickness.addEventListener("change", () => {
+  if (thickness.value === "custom") {
+    customFactor.style.display = "block";
+  } else {
+    customFactor.style.display = "none";
+  }
+});
+
+
+/* -----------------------------
+   MAIN CALC ROUTINE
+------------------------------*/
+function calculate() {
+  const d = parseFloat(diameter.value);
+  const q = parseInt(qty.value);
+
+  let factor = thickness.value === "custom"
+    ? parseFloat(customFactor.value)
+    : parseFloat(thickness.value);
+
+  if (!factor) factor = DEFAULT_FACTOR;
+
+  dbgFactor.textContent = factor + " g/in²";
+
+  const doughSingle = doughBallWeight(d, factor);
+  const doughTotal = doughSingle * q;
+
+  const doughRounded = Math.round(doughTotal * 10) / 10;
+  doughWeightEl.textContent = doughRounded + " g total";
+
+  const ing = ingredientWeights(doughRounded);
+
+  renderIngredients(ing);
+}
+
+function renderIngredients(ings) {
+  tableBody.innerHTML = "";
+
+  for (let [key, grams] of Object.entries(ings)) {
+    let vol = showVolumes.checked
+      ? gramsToLayered(grams, key)
+      : "—";
+
+    let tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${pretty(key)}</td>
+      <td>${grams.toFixed(1)}</td>
+      <td>${vol}</td>
+    `;
+    tableBody.appendChild(tr);
+  }
+}
+
+function pretty(k) {
+  return k.split("_").map(s => s[0].toUpperCase() + s.slice(1)).join(" ");
+}
+
+/* -----------------------------
+   RESET
+------------------------------*/
+function reset() {
+  diameter.value = 12;
+  diameterDisplay.textContent = "12";
+
+  qty.value = 1;
+  qtyDisplay.textContent = "1";
+
+  thickness.value = "2.387";
+  customFactor.style.display = "none";
+  customFactor.value = DEFAULT_FACTOR;
+
+  doughWeightEl.textContent = "— g";
+  tableBody.innerHTML = "";
+}
+
+
+/* INIT */
+reset();
+calculate();
+
+calcBtn.addEventListener("click", calculate);
+resetBtn.addEventListener("click", reset);
+
+</script>
+
+</body>
+</html>
