@@ -1,0 +1,83 @@
+
+    body {
+        font-family: "Merriweather", serif;
+        background: #faf7f2;
+        padding: 20px;
+        color: #333;
+        max-width: 800px;
+        margin: auto;
+    }
+
+    h1, h2 {
+        font-family: "Patrick Hand", cursive;
+        font-size: 2.3rem;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    a ,a:hover, a:visited{
+        color: rgb(29, 29, 77);
+        font-family: "Patrick Hand", cursive;
+        font-size: 2.3rem;
+        text-align: center;
+        margin-bottom: 10px;
+        text-decoration: none;
+    }
+    a:active{
+        text-decoration: none;
+        color: #000000;
+    }
+   
+
+    label {
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        display: block;
+        margin-top: 12px;
+    }
+
+    input[type="number"], input[type="range"], select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        font-size: 1.1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    table th {
+        background: #f0e7d8;
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        padding: 10px;
+    }
+
+    table td {
+        padding: 12px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .section {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .value-display {
+        font-family: "Patrick Hand";
+        font-size: 1.4rem;
+        text-align: center;
+        margin-top: 10px;
+    }
