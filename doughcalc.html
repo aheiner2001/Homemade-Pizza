@@ -4,80 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" href="/images/pizza copy.png" type="image/x-icon">
+<link rel="stylesheet" href="/styles/recipe.css">
 
-<title>Doe Calculator — Pizza Dough</title>
+<title>Calculator — Pizza Dough</title>
 
 
-<style>
-    body {
-        font-family: "Merriweather", serif;
-        background: #faf7f2;
-        padding: 20px;
-        color: #333;
-        max-width: 800px;
-        margin: auto;
-    }
 
-    h1, h2 {
-        font-family: "Patrick Hand", cursive;
-        font-size: 2.3rem;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    label {
-        font-family: "Patrick Hand", cursive;
-        font-size: 1.3rem;
-        display: block;
-        margin-top: 12px;
-    }
-
-    input[type="number"], input[type="range"], select {
-        width: 100%;
-        padding: 8px;
-        margin-top: 6px;
-        font-size: 1.1rem;
-        border: 2px solid #ccc;
-        border-radius: 8px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 25px;
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    table th {
-        background: #f0e7d8;
-        font-family: "Patrick Hand", cursive;
-        font-size: 1.3rem;
-        padding: 10px;
-    }
-
-    table td {
-        padding: 12px;
-        font-size: 1.1rem;
-        border-bottom: 1px solid #eee;
-    }
-
-    .section {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-
-    .value-display {
-        font-family: "Patrick Hand";
-        font-size: 1.4rem;
-        text-align: center;
-        margin-top: 10px;
-    }
-</style>
 
 </head>
 
@@ -85,7 +17,8 @@
 <div class="container">
   <header>
     <h1>Calculator — Pizza Dough</h1>
-    <div class="small">Factor: <span id="dbg-factor">2.387 g/in²</span></div>
+<a href="/index.html">&larr; Back</a>
+    <div class="small"><span id="dbg-factor" hidden>2.387 g/in²</span></div>
   </header>
 
   <div class="grid">
@@ -134,6 +67,23 @@
         <tbody id="ingredientsTable"></tbody>
       </table>
     </div>
+
+   <div class="instructions">
+  <h2>Dough Making Instructions</h2>
+  <ol>
+    <li>Cool water to below 60°F.</li>
+    <li>Mix the water and yeast.</li>
+    <li>Add flour and olive oil, and mix for 2 minutes.</li>
+    <li>Keep mixing on low speed, then add sugar and salt.</li>
+    <li>Mix for 10 more minutes.</li>
+    <li>Cover the dough with plastic wrap and let it rest for 1–3 hours.</li>
+    <li>Divide the dough into portions.</li>
+    <li>Shape each portion into a ball, sealing the seam.</li>
+    <li>Place the dough balls in a lightly oiled container.</li>
+    <li>Cover tightly and refrigerate for 2–4 days (3 days is ideal).</li>
+    <li>Let the dough come to room temperature before using.</li>
+  </ol>
+</div>
 
   </div>
 </div>

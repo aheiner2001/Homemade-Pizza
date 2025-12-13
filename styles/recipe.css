@@ -1,72 +1,83 @@
-:root{
-  --paper:#fbf4e6;
-  --paper-edges:#eedfbf;
-  --ink:#3b2f2a;
-  --accent:#c76b1a;
-  --muted:#7a6a5e;
-  --card:#fffaf1;
-  --shadow: rgba(45,33,25,0.12);
-}
 
-/* Page background mimicking parchment */
-html,body{height:100%;}
-body.recipe{
-  margin:0;
-  padding:32px;
-  font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(199,107,26,0.03), transparent 10%),
-              linear-gradient(180deg,#fffaf0 0%, #fbf4e6 30%, #f7ecd4 100%);
-  color:var(--ink);
-  display:flex; justify-content:center; -webkit-font-smoothing:antialiased;
-}
+    body {
+        font-family: "Merriweather", serif;
+        background: #faf7f2;
+        padding: 20px;
+        color: #333;
+        max-width: 800px;
+        margin: auto;
+    }
 
-.container{
-  width:980px; max-width:96%; background:var(--card); border-radius:10px; padding:28px; box-shadow:0 12px 40px var(--shadow); border:1px solid var(--paper-edges);
-  background-image: linear-gradient(0deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
-}
+    h1, h2 {
+        font-family: "Patrick Hand", cursive;
+        font-size: 2.3rem;
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
-header{display:flex; align-items:flex-start; gap:18px; margin-bottom:18px;}
-header h1{margin:0; font-family: 'Patrick Hand', 'Segoe UI', sans-serif; font-size:40px; line-height:1; color:var(--ink);}
-p.lead{margin:8px 0 18px; color:var(--muted); font-size:15px;}
+    a ,a:hover, a:visited{
+        color: rgb(29, 29, 77);
+        font-family: "Patrick Hand", cursive;
+        font-size: 2.3rem;
+        text-align: center;
+        margin-bottom: 10px;
+        text-decoration: none;
+    }
+    a:active{
+        text-decoration: none;
+        color: #000000;
+    }
+   
 
-.grid{display:grid; grid-template-columns: 1fr 1fr; gap:14px;}
-.card{background:transparent; padding:14px; border-radius:8px;}
+    label {
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        display: block;
+        margin-top: 12px;
+    }
 
-/* Input styles with soft paper look */
-label{display:block; font-size:14px; color:var(--muted); margin-bottom:8px;}
-input[type="number"], select{width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(60,50,40,0.08); background:linear-gradient(180deg,#fff 0%, #fbf7f0 100%); color:var(--ink); font-size:15px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);} 
-.row{display:flex; gap:8px; align-items:center;}
+    input[type="number"], input[type="range"], select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 6px;
+        font-size: 1.1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+    }
 
-/* Buttons styled like wooden tabs */
-button{background:var(--accent); color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700; box-shadow:0 4px 8px rgba(199,107,26,0.18); font-family: 'Patrick Hand', sans-serif;}
-button.ghost{background:transparent; color:var(--ink); border:1px solid rgba(60,50,40,0.06); box-shadow:none;}
-.copy-btn{background:transparent; color:var(--ink); border:1px dashed rgba(60,50,40,0.06); padding:8px 10px; border-radius:8px;}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
 
-/* Dough weight display */
-#doughWeight{font-family:'Patrick Hand', serif; font-size:28px; color:var(--ink);}
+    table th {
+        background: #f0e7d8;
+        font-family: "Patrick Hand", cursive;
+        font-size: 1.3rem;
+        padding: 10px;
+    }
 
-/* Ingredients table like an old recipe card */
-table{width:100%; border-collapse:collapse; margin-top:10px; background:rgba(0,0,0,0.00);}
-th, td{padding:10px 8px; text-align:left; font-size:15px; border-bottom:1px dashed rgba(120,90,60,0.08);}
-th{color:var(--muted); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.06em;}
-td:first-child{font-weight:700; color:var(--ink);}
-td:nth-child(2){width:110px;}
-td:nth-child(3){width:140px; color:var(--muted); font-style:italic;}
-.right{text-align:right;}
+    table td {
+        padding: 12px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #eee;
+    }
 
-.muted{color:var(--muted);}
-.small{font-size:13px; color:var(--muted);} 
+    .section {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
 
-/* Step / instructions card look (if later added) */
-.instructions{margin-top:18px; padding:14px; background:linear-gradient(180deg,#fffaf1, #fff7ea); border-radius:8px; border:1px solid rgba(120,90,60,0.04);} 
-.step{display:flex; gap:12px; margin-bottom:10px;}
-.step-number{width:36px; height:36px; background:#fff; border:2px solid rgba(120,90,60,0.08); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--accent); font-family:'Patrick Hand', sans-serif;}
-
-/* Print-friendly adjustments */
-@media print{
-  body.recipe{background: #fff; padding:0;}
-  .container{box-shadow:none; border:0; width:100%; max-width:720px; margin:0 auto;}
-  button, .copy-btn, .controls{display:none}
-}
-
-@media (max-width:720px){ .grid{grid-template-columns:1fr;} .container{padding:18px;} header h1{font-size:28px;} }
+    .value-display {
+        font-family: "Patrick Hand";
+        font-size: 1.4rem;
+        text-align: center;
+        margin-top: 10px;
+    }
