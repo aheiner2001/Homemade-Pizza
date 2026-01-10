@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed me more cheese</title>
+    <link rel="stylesheet" href="/styles/rat.css">
+</head>
+<body>
+
+
+
+<h1>feed em m</h1>
+<img src="/images/New Piskel.png" alt="" class="image_change">
+
+
+
+<div class="cheese_container">
+<h1>step 2 make some cheese draggable</h1>
+<img class="cheese" src="/images/cheese.png"  draggable="true" alt="">
+
+<!-- 
+<h2>step 3 Detect overlap</h2>
+<img class="cheese" src="/images/cheese.png" alt="">
+
+ -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    //STEP 3
+const sprite = document.getElementById("sprite");
+
+const columns = 4;
+const rows = 2;
+
+const frameWidth = 100;
+const frameHeight = 150;
+
+function setFrame(index) {
+  const col = index % columns;
+  const row = Math.floor(index / columns);
+
+  sprite.style.backgroundPosition =
+    `-${col * frameWidth}px -${row * frameHeight}px`;
+}
+
+const play = document.querySelector("#play");
+
+let run = false;
+let frame = 0;
+let animId = null;
+
+play.addEventListener("click", () => {
+  if (!run) {
+    // START animation
+    animId = setInterval(() => {
+      setFrame(frame);
+      frame = (frame + 1) % 8;
+    }, 100);
+
+    run = true;
+    play.textContent = "Stop";
+  } else {
+    // STOP animation
+    clearInterval(animId);
+    animId = null;
+
+    run = false;
+    play.textContent = "Play";
+  }
+});
+
+
+
+   //STEP 1
+const img = document.querySelector(".image_change");
+var img_num = 0
+
+img.addEventListener("mouseenter", () => {
+ // if (img_num === 0) {
+    img.src = "images/New Piskel (1).png";
+   //img_num = 1;
+  //} else {
+  //  img.src = "/images/New Piskel.png";
+ //   img_num = 0;
+  }
+);
+img.addEventListener("mouseleave", () => {
+ // if (img_num === 0) {
+    img.src = "images/New Piskel.png";
+   //img_num = 1;
+  //} else {
+  //  img.src = "/images/New Piskel.png";
+ //   img_num = 0;
+  }
+);
+
+
+
+
+
+//STEP 2 
+const cheese = document.querySelector(".cheese");
+
+let dragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+cheese.addEventListener("mousedown", (e) => {
+  dragging = true;
+  const rect = cheese.getBoundingClientRect();
+  // center the grab
+  offsetX = e.clientX - rect.left;
+  offsetY = e.clientY - rect.top;
+  cheese.style.cursor = "grabbing";
+});
+
+const targetImg = document.querySelector(".image_change");
+
+document.addEventListener("mousemove", (e) => {
+  if (!dragging) return;
+
+  // Move the cheese
+  cheese.style.left = (e.pageX - offsetX) + "px";
+  cheese.style.top = (e.pageY - offsetY) + "px";
+
+  // Check overlap
+  const cheeseRect = cheese.getBoundingClientRect();
+  const targetRect = targetImg.getBoundingClientRect();
+
+  const overlapping = !(
+    cheeseRect.right < targetRect.left ||
+    cheeseRect.left > targetRect.right ||
+    cheeseRect.bottom < targetRect.top ||
+    cheeseRect.top > targetRect.bottom
+  );
+
+  // Swap image if overlapping
+  if (overlapping) {
+    targetImg.src = "images/New Piskel (1).png";
+  } else {
+    targetImg.src = "images/New Piskel.png";
+  }
+});
+
+
+document.addEventListener("mouseup", () => {
+  dragging = false;
+  cheese.style.cursor = "grab";
+});
+
+cheese.addEventListener("dragstart", (e) => e.preventDefault());
+
+
+</script>
+</body>
+</html>
