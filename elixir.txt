@@ -1,0 +1,7 @@
+num.map(readings, fn
+  reading when is_number(reading) and reading > 100 -> {:high, reading}
+  reading when is_number(reading) -> {:normal, reading}
+  _other -> {:error, :invalid_data}
+end)
+
+
